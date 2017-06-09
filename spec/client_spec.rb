@@ -14,6 +14,13 @@ describe 'simple requests' do
     expect(j["fault"]).to eq(nil)
   end
 
+  it 'should do a GET request with no hmac' do
+    client = SVBClient.new(api_key)
+    j = JSON.parse(client.get("/v1").body)
+    expect(j["api_version"]).to eq("1")
+    expect(j["fault"]).to eq(nil)
+  end
+
   it 'should do a POST request' do
     client = SVBClient.new(api_key, hmac)
     j = JSON.parse(client.post("/v1", { "a": "b" }).body)

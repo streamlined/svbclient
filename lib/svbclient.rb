@@ -16,7 +16,7 @@ require 'uri'
 require 'rest-client'
 
 class SVBClient
-  def initialize(api_key, hmac, base_url: 'https://api.svb.com')
+  def initialize(api_key, hmac = nil, base_url: 'https://api.svb.com')
     @API_KEY = api_key
     @HMAC_SECRET = hmac
     @BASE_URL = base_url
@@ -28,15 +28,19 @@ class SVBClient
   end
 
   def headers(method, path, query, body)
-    mytimestamp = Time.now.to_i.to_s
-    signature = signature(mytimestamp, method, path, query, body)
-
-    {
-      "X-Timestamp": mytimestamp,
-      "X-Signature": signature,
+    hs = {
       "Authorization": "Bearer " + @API_KEY,
       "Content-Type": "application/json"
     }
+
+    if @HMAC_SECRET
+      mytimestamp = Time.now.to_i.to_s
+      signature = signature(mytimestamp, method, path, query, body)
+      hs["X-Timestamp"] = mytimestamp
+      hs["X-Signature"] = signature
+    end
+
+    hs
   end
 
   def delete(path)
