@@ -10,7 +10,7 @@
 
 require 'json'
 require 'openssl'
-require 'Base64'
+require 'base64'
 require 'net/https'
 require 'uri'
 require 'rest-client'
@@ -44,35 +44,55 @@ class SVBClient
   end
 
   def delete(path)
-    hs = headers('DELETE', path, '', '')
-    RestClient.delete(@BASE_URL + path, headers=hs)
+    begin
+      hs = headers('DELETE', path, '', '')
+      RestClient.delete(@BASE_URL + path, headers=hs)
+    rescue => e
+      e.response
+    end
   end
 
   def get(path, query="")
-    hs = headers('GET', path, query, '')
-    RestClient.get(@BASE_URL + path + '?' + query, headers=hs)
+    begin
+      hs = headers('GET', path, query, '')
+      RestClient.get(@BASE_URL + path + '?' + query, headers=hs)
+    rescue => e
+      e.response
+    end
   end
 
   def patch(path, jsonbody)
-    jsonbody = { data: jsonbody } unless jsonbody.key? 'data'
-    hs = headers('PATCH', path, '', jsonbody.to_json)
-    RestClient.patch(@BASE_URL + path, jsonbody.to_json, headers=hs)
+    begin
+      jsonbody = { data: jsonbody } unless jsonbody.key? 'data'
+      hs = headers('PATCH', path, '', jsonbody.to_json)
+      RestClient.patch(@BASE_URL + path, jsonbody.to_json, headers=hs)
+    rescue => e
+      e.response
+    end
   end
 
   def post(path, jsonbody)
-    jsonbody = { data: jsonbody } unless jsonbody.key? 'data'
-    hs = headers('POST', path, '', jsonbody.to_json)
-    RestClient.post(@BASE_URL + path, jsonbody.to_json, headers=hs)
+    begin
+      jsonbody = { data: jsonbody } unless jsonbody.key? 'data'
+      hs = headers('POST', path, '', jsonbody.to_json)
+      RestClient.post(@BASE_URL + path, jsonbody.to_json, headers=hs)
+    rescue => e
+      e.response
+    end
   end
 
   def upload(path, filesrc, mimetype)
-    mytimestamp = Time.now.to_i.to_s
-    signature = signature(mytimestamp, 'POST', path, '', '')
+    begin
+      mytimestamp = Time.now.to_i.to_s
+      signature = signature(mytimestamp, 'POST', path, '', '')
 
-    hs = headers('POST', path, '', '')
-    hs["Content-Type"] = "multipart/form-data"
+      hs = headers('POST', path, '', '')
+      hs["Content-Type"] = "multipart/form-data"
 
-    RestClient.post(@BASE_URL + path, { :file => filesrc, :multipart => true, 'Content-Type': mimetype }, headers=hs)
+      RestClient.post(@BASE_URL + path, { :file => filesrc, :multipart => true, 'Content-Type': mimetype }, headers=hs)
+    rescue => e
+      e.response
+    end  
   end
 end
 
