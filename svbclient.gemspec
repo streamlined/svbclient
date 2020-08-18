@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'svbclient'
   s.version     = '3.2.3'
-  s.date        = '2017-06-02'
+  s.date        = '2020-08-18'
   s.summary     = "Silicon Valley Bank API helper library"
   s.description = "Silicon Valley Bank API helper library"
   s.authors     = ["Silicon Valley Bank"]
