@@ -43,12 +43,22 @@ class SVBClient
     hs
   end
 
+  def error_builder(error)
+    error = {
+      code: error.http_code,
+      status_text: error.message,
+      message: JSON.parse(error.response)
+    }
+    puts error
+    error
+  end
+
   def delete(path)
     begin
       hs = headers('DELETE', path, '', '')
       RestClient.delete(@BASE_URL + path, headers=hs)
     rescue => e
-      e.response
+      error_builder(e)
     end
   end
 
@@ -57,7 +67,7 @@ class SVBClient
       hs = headers('GET', path, query, '')
       RestClient.get(@BASE_URL + path + '?' + query, headers=hs)
     rescue => e
-      e.response
+      error_builder(e)
     end
   end
 
@@ -67,7 +77,7 @@ class SVBClient
       hs = headers('PATCH', path, '', jsonbody.to_json)
       RestClient.patch(@BASE_URL + path, jsonbody.to_json, headers=hs)
     rescue => e
-      e.response
+      error_builder(e)
     end
   end
 
@@ -77,7 +87,7 @@ class SVBClient
       hs = headers('POST', path, '', jsonbody.to_json)
       RestClient.post(@BASE_URL + path, jsonbody.to_json, headers=hs)
     rescue => e
-      e.response
+      error_builder(e)
     end
   end
 
@@ -91,7 +101,7 @@ class SVBClient
 
       RestClient.post(@BASE_URL + path, { :file => filesrc, :multipart => true, 'Content-Type': mimetype }, headers=hs)
     rescue => e
-      e.response
+      error_builder(e)
     end  
   end
 end
