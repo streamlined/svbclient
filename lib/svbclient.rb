@@ -44,19 +44,25 @@ class SVBClient
   end
 
   def error_builder(error)
-    error = {
+    {
       code: error.http_code,
       status_text: error.message,
       message: JSON.parse(error.response)
     }
-    puts error
-    error
+  end
+
+  def response_builder(response)
+    {
+      code: response.code,
+      data: JSON.parse(response.body)['data'],
+    }
   end
 
   def delete(path)
     begin
       hs = headers('DELETE', path, '', '')
-      RestClient.delete(@BASE_URL + path, headers=hs)
+      response = RestClient.delete(@BASE_URL + path, headers=hs)
+      response_builder(response)
     rescue => e
       error_builder(e)
     end
@@ -65,7 +71,8 @@ class SVBClient
   def get(path, query="")
     begin
       hs = headers('GET', path, query, '')
-      RestClient.get(@BASE_URL + path + '?' + query, headers=hs)
+      response = RestClient.get(@BASE_URL + path + '?' + query, headers=hs)
+      response_builder(response)
     rescue => e
       error_builder(e)
     end
@@ -75,7 +82,8 @@ class SVBClient
     begin
       jsonbody = { data: jsonbody } unless jsonbody.key? 'data'
       hs = headers('PATCH', path, '', jsonbody.to_json)
-      RestClient.patch(@BASE_URL + path, jsonbody.to_json, headers=hs)
+      response = RestClient.patch(@BASE_URL + path, jsonbody.to_json, headers=hs)
+      response_builder(response)
     rescue => e
       error_builder(e)
     end
@@ -85,7 +93,8 @@ class SVBClient
     begin
       jsonbody = { data: jsonbody } unless jsonbody.key? 'data'
       hs = headers('POST', path, '', jsonbody.to_json)
-      RestClient.post(@BASE_URL + path, jsonbody.to_json, headers=hs)
+      response = RestClient.post(@BASE_URL + path, jsonbody.to_json, headers=hs)
+      response_builder(response)
     rescue => e
       error_builder(e)
     end
@@ -99,25 +108,11 @@ class SVBClient
       hs = headers('POST', path, '', '')
       hs["Content-Type"] = "multipart/form-data"
 
-      RestClient.post(@BASE_URL + path, { :file => filesrc, :multipart => true, 'Content-Type': mimetype }, headers=hs)
+      response = RestClient.post(@BASE_URL + path, { :file => filesrc, :multipart => true, 'Content-Type': mimetype }, headers=hs)
+      response_builder(response)
     rescue => e
       error_builder(e)
     end  
-  end
-end
-
-class SVBClient::ACH
-  def initialize(client, id)
-    @client = client
-    @id = id
-  end
-
-  def data
-    JSON.parse(@client.get("/v1/ach/#{@id}").body)["data"]
-  end
-
-  def update_status(status)
-    @client.patch("/v1/ach/#{id}", { status: status })
   end
 end
 
@@ -128,24 +123,22 @@ class SVBClient::ACHHandler
   end
 
   def create(ach_data)
-    response = @client.post('/v1/ach', ach_data)
-    SVBClient::ACH.new(@client, JSON.parse(response.body)["data"]["id"])
+    @client.post('/v1/ach', ach_data)
+  end
+
+  def update_status(status)
+    @client.patch("/v1/ach/#{id}", { status: status })
   end
 
   def get(id)
     @client.get("/v1/ach/#{id}")
-    SVBClient::ACH.new(@client, id)
   end
 
   def find(status: nil, effective_date: nil)
     query = ''
     query += "filter%5Bstatus%5D=#{status}" unless status.nil?
     query += "filter%5Beffective_date%5D=#{effective_date}" unless effective_date.nil?
-    response = @client.get("/v1/ach", query)
-    list = JSON.parse(response.body)["data"]
-    list.map do |ach|
-      SVBClient::ACH.new(@client, ach["id"])
-    end
+    @client.get("/v1/ach", query)
   end
 end
 
