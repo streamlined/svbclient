@@ -116,6 +116,33 @@ class SVBClient
   end
 end
 
+class SVBClient::Webhook
+  def initialize(client)
+    raise 'provide an API client' if client.nil?
+    @client = client
+  end
+
+  def create(webhook_data)
+    @client.post('/v1/webhooks', webhook_data)
+  end
+
+  def retrieve(id)
+    @client.get("/v1/webhooks/#{id}")
+  end
+
+  def update(status)
+    @client.patch("/v1/webhooks/#{id}", { status: status })
+  end
+
+  def delete(id)
+    @client.delete("/v1/webhooks/#{id}")
+  end
+
+  def list_all
+    @client.get("v1/webhooks")
+  end
+end
+
 class SVBClient::ACHHandler
   def initialize(client)
     raise 'provide an API client' if client.nil?
