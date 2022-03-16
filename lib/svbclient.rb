@@ -130,7 +130,7 @@ class SVBClient::Webhook
     @client.get("/v1/webhooks/#{id}")
   end
 
-  def update(status)
+  def update(id, status)
     @client.patch("/v1/webhooks/#{id}", { status: status })
   end
 
@@ -153,7 +153,7 @@ class SVBClient::ACHHandler
     @client.post('/v1/ach', ach_data)
   end
 
-  def update_status(status)
+  def update_status(id, status)
     @client.patch("/v1/ach/#{id}", { status: status })
   end
 
@@ -409,7 +409,7 @@ class SVBClient::Onboarding::Resource
     JSON.parse(@client.get("/v1/#{@type}/#{@id}").body)["data"]
   end
 
-  def update(jsonbody)
+  def update(id, jsonbody)
     @client.patch("/v1/#{@type}/#{@id}", jsonbody)
   end
 
