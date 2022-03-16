@@ -409,7 +409,7 @@ class SVBClient::Onboarding::Resource
     JSON.parse(@client.get("/v1/#{@type}/#{@id}").body)["data"]
   end
 
-  def update(id, jsonbody)
+  def update(jsonbody)
     @client.patch("/v1/#{@type}/#{@id}", jsonbody)
   end
 
