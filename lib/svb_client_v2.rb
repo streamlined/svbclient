@@ -21,7 +21,7 @@ class SVBClientV2
     @base_url = base_url
   end
 
-  def get_bearer_token(scope: nil)
+  def get_bearer_token(scope)
     uri = URI.parse(@base_url + '/v1/security/oauth/token')
     request = Net::HTTP::Post.new(uri)
     request.content_type = "application/x-www-form-urlencoded"
@@ -29,7 +29,7 @@ class SVBClientV2
 
     request["Authorization"] = "Basic #{access_token}"
 
-    request.set_form_data("grant_type" => "client_credentials", "scope" => "accountbalance")
+    request.set_form_data("grant_type" => "client_credentials", "scope" => scope)
     req_options = {
       use_ssl: uri.scheme == "https"
     }
@@ -43,7 +43,7 @@ class SVBClientV2
   end
 
   def post(path, body, scope)
-    access_token = get_bearer_token(scope: scope)
+    access_token = get_bearer_token(scope)
     auth_header = "Bearer #{access_token}"
 
     uri = URI.parse(@base_url + "/v1/accounts/balances")
