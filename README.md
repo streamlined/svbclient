@@ -1,4 +1,4 @@
-# svbclient Ruby gem
+# SVBClient Ruby gem
 
 A gem which you can use in your Ruby / Ruby on Rails app to simplify your integration with the SVB API.
 
@@ -10,6 +10,7 @@ A gem which you can use in your Ruby / Ruby on Rails app to simplify your integr
     - [ACH Transfers](#ach)
     - [Account Transfers](#account-transfers)
 - [Testing](#testing)
+- [Contributing](#contributing)
 
 
 ## Installation
@@ -33,10 +34,12 @@ require 'svbclient'
 
 client = SVB::Client.new(client_id: CLIENT_ID, client_secret: CLIENT_SECRET)
 ```
+*Note:* The client defaults to the Sandbox environment. To use the Production environment, set the `base_url` parameter
+to 'https://api.svb.com' when initializing the client.
 
-# API Usage
+## API Usage
 
-## Account Balance
+### Account Balance
 
 Get account balance
 ```ruby
@@ -64,9 +67,9 @@ client.get_account_balance(account_number: '1111111111')
 }
 ```
 
-## ACH
+### ACH
 
-### Get a list of all ACH
+#### Get a list of all ACH
 ```ruby
 client.list_achs
 ```
@@ -99,14 +102,14 @@ client.list_achs
 }
 ```
 
-### Search ACH by field
+#### Search ACH by field
 
 `account_number`, `amount`, `direction`, `effective_entry_date`, `offset`, `limit`, `status`, `batch_id`
 ```ruby
 client.list_achs(effective_entry_date: "2024-10-23")
 ```
 
-### Create an ACH
+#### Create an ACH
 ```ruby
 client.create_ach(batch_details: {
   account_number: "1111111111", # Originating account number
@@ -145,7 +148,7 @@ client.create_ach(batch_details: {
 }
 ```
 
-### Get ACH details
+#### Get ACH details
 ```ruby
 client.get_ach('25dbe37c-8773-4c97-91f7-4335725122ba')
 ```
@@ -184,7 +187,7 @@ client.get_ach('25dbe37c-8773-4c97-91f7-4335725122ba')
 }
 ```
 
-### Cancel an ACH
+#### Cancel an ACH
 ```ruby
 client.cancel_ach('083a2d38-a82f-41f2-b658-01c8402b70d4')
 ```
@@ -218,9 +221,9 @@ client.cancel_ach('083a2d38-a82f-41f2-b658-01c8402b70d4')
 }
 ```
 
-## Account Transfers
+### Account Transfers
 
-### Create an account-to-account book transfer
+#### Create an account-to-account book transfer
 ```ruby
 client.create_transfer(amount: 250000, from_account_number: 3300297004, to_account_number: 3300297042, memo: 'Lockbox Sweep')
 ```
@@ -250,7 +253,7 @@ client.create_transfer(amount: 250000, from_account_number: 3300297004, to_accou
 }
 ```
 
-### Get an account-to-account book transfer details
+#### Get an account-to-account book transfer details
 ```ruby
 client.get_transfer('6085f92a-a67f-4f5e-9e28-8b5f8a940114')
 ```
@@ -280,7 +283,7 @@ client.get_transfer('6085f92a-a67f-4f5e-9e28-8b5f8a940114')
 }
 ```
 
-### Get a list of all account-to-account book transfers
+#### Get a list of all account-to-account book transfers
 ```ruby
 client.list_transfers
 ```
@@ -323,10 +326,21 @@ client.list_transfers
 }
 ```
 
-# Testing
+## Testing
+
+First update `client_spec.rb` with your client id and secret. If you don't have it, contact SVB API support to get your client id and secret.
+
+```ruby
+let(:client_id) { '' }
+let(:client_secret) { '' }
+```
 
 To run the tests, run the following command:
 
 ```
 bundle exec rspec
 ```
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub.
