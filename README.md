@@ -1,4 +1,4 @@
-# SVBClient Ruby gem
+# SVB API Client Ruby gem
 
 A gem which you can use in your Ruby / Ruby on Rails app to simplify your integration with the SVB API.
 
