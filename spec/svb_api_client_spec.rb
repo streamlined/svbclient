@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'svb_client'
 require 'json'
 
-RSpec.describe SVB::Client do
+RSpec.describe SVB::API::Client do
   let(:client_id) { '' }
   let(:client_secret) { '' }
   let(:client) { described_class.new(client_id: client_id, client_secret: client_secret) }
