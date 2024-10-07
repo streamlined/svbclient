@@ -1,6 +1,6 @@
 # Encoding: utf-8
 require 'spec_helper'
-require 'client'
+require 'svb_client'
 require 'json'
 
 RSpec.describe SVB::Client do

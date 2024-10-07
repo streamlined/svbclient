@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = "Silicon Valley Bank Ruby SDK"
   s.authors     = ["Streamlined Financial Inc."]
   s.email       = 'apisupport@svb.com'
-  s.files       = ["lib/client.rb"]
+  s.files       = ["lib/svb_client.rb"]
   s.homepage    = 'http://rubygems.org/gems/svbclient'
   s.license     = 'MIT'
   s.add_dependency 'rest-client'
