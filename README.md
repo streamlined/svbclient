@@ -18,21 +18,21 @@ A gem which you can use in your Ruby / Ruby on Rails app to simplify your integr
 Via command line:
 
 ```
-gem install svbclient
+gem install svb_api_client
 ```
 
 In a Gemfile:
 
 ```ruby
-gem 'svbclient', '~> 4.0.0'
+gem 'svb_api_client', '~> 4.0.0'
 ```
 
 ## Initialization
 
 ```ruby
-require 'svbclient'
+require 'svb_api_client'
 
-client = SVB::Client.new(client_id: CLIENT_ID, client_secret: CLIENT_SECRET)
+client = SVB::API::Client.new(client_id: CLIENT_ID, client_secret: CLIENT_SECRET)
 ```
 *Note:* The client defaults to the Sandbox environment. To use the Production environment, set the `base_url` parameter
 to 'https://api.svb.com' when initializing the client.
