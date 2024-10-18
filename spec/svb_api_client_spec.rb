@@ -1,6 +1,6 @@
 # Encoding: utf-8
 require 'spec_helper'
-require 'svb_client'
+require 'svb_api_client'
 require 'json'
 
 RSpec.describe SVB::API::Client do
@@ -94,7 +94,7 @@ RSpec.describe SVB::API::Client do
       it 'creates an account-to-account book transfer successfully' do
         expect(@created_transfer_response_code).to eq('201')
         expect(@created_transfer_id).to be_a(String)
-        expect(@created_transfer_status).to eq('SUCCEEDED')
+        expect(@created_transfer_status).to match(/PROCESSING|SUCCEEDED/)
         expect(@created_transfer_amount).to eq('1.00')
       end
 

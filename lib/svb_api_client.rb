@@ -48,7 +48,7 @@ module SVB
         when 200
           data["access_token"]
         else
-          raise ClientError.new({
+          raise SVB::API::ClientError.new({
                                   code: response.code,
                                   status_text: data["error"] || response.message,
                                   message: data["error_description"] || "An error occurred",
@@ -56,7 +56,7 @@ module SVB
                                 })
         end
       rescue JSON::ParserError
-        raise ClientError.new({
+        raise SVB::API::ClientError.new({
                                 code: 500,
                                 status_text: "JSON::ParserError",
                                 message: "Invalid JSON response"
@@ -78,7 +78,7 @@ module SVB
       def make_request(method, path:, body: nil, scope:)
         access_token = get_bearer_token(scope)
 
-        raise SVB::ClientError.new("Invalid access token") unless access_token && access_token.is_a?(String)
+        raise SVB::API::ClientError.new("Invalid access token") unless access_token && access_token.is_a?(String)
 
         uri = URI.parse(@base_url + path)
         request = create_request(method, uri)
@@ -126,7 +126,7 @@ module SVB
           http.request(request)
         end
       rescue SocketError, Timeout::Error => e
-        raise ClientError.new({
+        raise SVB::API::ClientError.new({
                                 code: 500,
                                 status_text: e.class.name,
                                 message: e.message
