@@ -73,9 +73,9 @@ RSpec.describe SVB::API::Client do
 
   describe '#create_transfer and #get_transfer' do
     describe 'Transfer operations' do
-      let (:from_account_number) { 3300297042 }
-      let (:to_account_number) { 3300297004 }
-      let (:transfer_amount) { 100 }
+      let(:from_account_number) { 3300297042 }
+      let(:to_account_number) { 3300297004 }
+      let(:transfer_amount) { 100 }
 
       let(:created_transfer_id) { @created_transfer_id }
       let(:created_transfer_status) { @created_transfer_status }
@@ -140,7 +140,7 @@ RSpec.describe SVB::API::Client do
   end
 
   describe '#get_transfer' do
-    let (:invalid_transfer_id) {'12345678-a67f-4f5e-9e28-8b5f8a940114'}
+    let(:invalid_transfer_id) {'12345678-a67f-4f5e-9e28-8b5f8a940114'}
 
     it 'returns 404 error if an invalid transfer id is provided' do
       response = client.get_transfer(invalid_transfer_id)
@@ -160,7 +160,7 @@ RSpec.describe SVB::API::Client do
   end
 
   describe '#list_achs' do
-    let (:account_number) { 3300297004 }
+    let(:account_number) { 3300297004 }
 
     it 'retrieves a list of all ACH transfers' do
       response = client.list_achs
@@ -182,7 +182,7 @@ RSpec.describe SVB::API::Client do
   end
 
   describe '#create_ach, #get_ach and #cancel_ach' do
-    let (:account_number) { 3300297004 }
+    let(:account_number) { 3300297004 }
 
     describe 'ACH operations' do
       let(:batch_details) do
@@ -250,7 +250,7 @@ RSpec.describe SVB::API::Client do
   end
 
   describe '#cancel_ach' do
-    let (:invalid_ach_id) { '12345678-8773-4c97-91f7-4335725122ba' }
+    let(:invalid_ach_id) {'12345678-8773-4c97-91f7-4335725122ba'}
 
     it 'returns 404 error if an invalid ach id is provided' do
       response = client.cancel_ach(invalid_ach_id)
@@ -270,7 +270,7 @@ RSpec.describe SVB::API::Client do
   end
 
   describe '#get_ach' do
-    let (:invalid_ach_id) { '12345678-8773-4c97-91f7-4335725122ba' }
+    let(:invalid_ach_id) {'12345678-8773-4c97-91f7-4335725122ba'}
 
     it 'returns 404 error if an invalid ach id is provided' do
       response = client.get_ach(invalid_ach_id)
