@@ -16,14 +16,14 @@ module AccountTransfer
   end
 
   def get_transfer(id)
-    raise ArgumentError, "Transfer ID is required" if id.blank?
+    raise ArgumentError, "Transfer ID is required" if id.empty?
 
     get(path: "/v1/payment/account-transfers/#{id}", scope: ACCOUNT_TRANSFER_SCOPE)
   end
 
   def create_transfer(amount:, from_account_number:, to_account_number:, memo:nil)
-    raise ArgumentError, "Amount is required" if amount.blank? || amount <= 0
-    raise ArgumentError, "A from_account and to_account is required" if from_account_number.blank? || to_account_number.blank?
+    raise ArgumentError, "Amount is required" if amount.nil? || !amount.is_a?(Numeric) || amount <= 0
+    raise ArgumentError, "A from_account and to_account is required" if from_account_number.to_s.strip.empty? || to_account_number.to_s.strip.empty?
 
     return if amount.nil? || amount <= 0
     payload = {

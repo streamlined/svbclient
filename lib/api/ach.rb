@@ -30,14 +30,14 @@ module ACH
   end
 
   def get_ach(id)
-    raise ArgumentError, "ACH ID is required" if id.blank?
+    raise ArgumentError, "ACH ID is required" if id.to_s.strip.empty?
 
     get(path: "/v2/transfer/domestic-achs/#{id}", scope: ACH_SCOPE)
   end
 
   def create_ach(batch_details: {}, transfers: [])
-    raise ArgumentError, "Batch details are required" if batch_details.blank? || batch_details.empty?
-    raise ArgumentError, "Transfer details are required" if transfers.blank? || transfers.empty?
+    raise ArgumentError, "Batch details are required" if batch_details.nil? || batch_details.empty?
+    raise ArgumentError, "Transfer details are required" if transfers.nil? || transfers.empty?
 
     payload = {
       batch_details: batch_details,
@@ -47,7 +47,7 @@ module ACH
   end
 
   def cancel_ach(id)
-    raise ArgumentError, "ACH ID is required" if id.blank?
+    raise ArgumentError, "ACH ID is required" if id.to_s.strip.empty?
 
     payload = [{
                  "op": "replace",
