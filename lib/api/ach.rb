@@ -35,6 +35,35 @@ module ACH
     get(path: "/v2/transfer/domestic-achs/#{id}", scope: ACH_SCOPE)
   end
 
+  def get_legacy_ach(id, api_key: nil, hmac_secret: nil)
+    raise ArgumentError, "ACH ID is required" if id.to_s.strip.empty?
+
+    path = "/v1/ach/#{id}"
+    headers = {
+      "Authorization": "Bearer #{api_key}",
+      "Content-Type": 'application/json'
+    }
+
+    if hmac_secret
+      timestamp = Time.now.to_i.to_s
+      message = [timestamp, 'GET', path, '', ''].join("\n")
+      signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), hmac_secret, message)
+
+      headers["X-Timestamp"] = timestamp
+      headers["X-Signature"] = signature
+    end
+
+    uri = URI.parse(@base_url + path)
+    request = Net::HTTP::Get.new(uri, headers)
+    response = send_request(uri, request)
+    parsed_body = JSON.parse(response.body)
+
+    {
+      code: response.code,
+      data: parsed_body['data'] || parsed_body,
+    }
+  end
+
   def create_ach(batch_details: {}, transfers: [])
     raise ArgumentError, "Batch details are required" if batch_details.nil? || batch_details.empty?
     raise ArgumentError, "Transfer details are required" if transfers.nil? || transfers.empty?
