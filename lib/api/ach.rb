@@ -99,10 +99,13 @@ module ACH
       batch_details: {
         settlement_priority: "STANDARD"
       },
-      reversal_details_single_mass_id: {
-        reason_for_reversal: reason,
-        original_mass_delivery_id: id
-      }
+      reversal_details_single_mass_id: {},
+      reversal_details_multiple_id: [
+        {
+          reason_for_reversal: reason,
+          original_id: id
+        }
+      ]
     }
 
     headers = {
