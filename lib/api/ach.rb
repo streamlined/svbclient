@@ -105,7 +105,11 @@ module ACH
       }
     }
 
-    post(path: '/v2/transfer/reversal', body: payload, scope: ACH_SCOPE)
+    headers = {
+      "prefer" => "RETURN_REPRESENTATION"
+    }
+
+    post(path: '/v2/transfer/reversal', body: payload, scope: ACH_SCOPE, headers: headers)
   end
 
 end

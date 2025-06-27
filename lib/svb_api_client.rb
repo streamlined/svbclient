@@ -63,19 +63,19 @@ module SVB
                               })
       end
 
-      def post(path:, body:, scope:)
-        make_request(:post, path: path, body: body, scope: scope)
+      def post(path:, body:, scope:, headers: {})
+        make_request(:post, path: path, body: body, scope: scope, headers: headers)
       end
 
-      def get(path:, scope:)
-        make_request(:get, path: path, scope: scope)
+      def get(path:, scope:, headers: {})
+        make_request(:get, path: path, scope: scope, headers: headers)
       end
 
-      def patch(path:, body:, scope:)
-        make_request(:patch, path: path, body: body, scope: scope)
+      def patch(path:, body:, scope:, headers: {})
+        make_request(:patch, path: path, body: body, scope: scope, headers: headers)
       end
 
-      def make_request(method, path:, body: nil, scope:)
+      def make_request(method, path:, body: nil, scope:, headers: {})
         access_token = get_bearer_token(scope)
 
         raise SVB::API::ClientError.new("Invalid access token") unless access_token && access_token.is_a?(String)
@@ -83,7 +83,7 @@ module SVB
         uri = URI.parse(@base_url + path)
         request = create_request(method, uri)
 
-        request = set_request_headers(request, access_token)
+        request = set_request_headers(request, access_token, headers)
         if body
           request.body = body.is_a?(Hash) || body.is_a?(Array) ? body.to_json : body
           request = set_jwt_headers(request, body)
@@ -108,9 +108,12 @@ module SVB
         end
       end
 
-      def set_request_headers(request, access_token)
+      def set_request_headers(request, access_token, headers = {})
         request.content_type = "application/json"
         request["Authorization"] = "Bearer #{access_token}"
+        headers.each do |key, value|
+          request[key] = value
+        end
         request
       end
 
