@@ -86,4 +86,26 @@ module ACH
     patch(path: "/v2/transfer/domestic-achs/#{id}", body: payload, scope: ACH_SCOPE)
   end
 
+  def reverse_ach(id, reason: "DUPLICATE_ENTRY")
+    raise ArgumentError, "ACH ID is required" if id.to_s.strip.empty?
+
+    valid_reasons = %w[DUPLICATE_ENTRY INCORRECT_RECEIVER_(NOT_FRAUD_RELATED) INCORRECT_DOLLAR_AMOUNT_(NOT_FRAUD_RELATED) DEBIT(S)_SENT_EARLIER_THAN_INTENDED CREDIT(S)_SENT_LATER_THAN_INTENDED PPD_CREDIT_RELATED_TERMINATION/SEPARATION_FROM_EMPLOYMENT]
+
+    if reason && !valid_reasons.include?(reason)
+      raise ArgumentError, "Invalid reason. Must be one of: #{valid_reasons.join(', ')}"
+    end
+
+    payload = {
+      batch_details: {
+        settlement_priority: "STANDARD"
+      },
+      reversal_details_single_mass_id: {
+        reason_for_reversal: reason,
+        original_id: id
+      }
+    }
+
+    post(path: '/v2/transfer/reversal', body: payload, scope: ACH_SCOPE)
+  end
+
 end

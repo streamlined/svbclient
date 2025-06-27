@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'svb_api_client'
-  s.version     = '4.0.0'
-  s.date        = '2024-10-01'
+  s.version     = '4.0.1'
+  s.date        = '2025-06-26'
   s.summary     = "Silicon Valley Bank Ruby SDK"
   s.description = "Silicon Valley Bank Ruby SDK"
   s.authors     = ["Streamlined Financial Inc."]

@@ -221,6 +221,51 @@ client.cancel_ach('083a2d38-a82f-41f2-b658-01c8402b70d4')
 }
 ```
 
+#### Reverse an ACH
+```ruby
+client.reverse_ach('083a2d38-a82f-41f2-b658-01c8402b70d4')
+```
+
+You can also provide an optional reason for the reversal. The reason must be one of the following values:
+- "DUPLICATE_ENTRY"
+- "INCORRECT_RECEIVER_(NOT_FRAUD_RELATED)"
+- "INCORRECT_DOLLAR_AMOUNT_(NOT_FRAUD_RELATED)"
+- "DEBIT(S)_SENT_EARLIER_THAN_INTENDED"
+- "CREDIT(S)_SENT_LATER_THAN_INTENDED"
+- "PPD_CREDIT_RELATED_TERMINATION/SEPARATION_FROM_EMPLOYMENT"
+
+```ruby
+client.reverse_ach('083a2d38-a82f-41f2-b658-01c8402b70d4', reason: 'DUPLICATE_ENTRY')
+```
+
+Note: The settlement_priority is automatically set to "STANDARD" for all ACH reversals.
+
+```ruby
+{
+  :code=>"201", 
+  :data=>{
+    "id"=>"7a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d", 
+    "status"=>"PROCESSING", 
+    "batch_details"=>{
+      "settlement_priority"=>"STANDARD"
+    },
+    "reversal_details_single_mass_id"=>{
+      "reason_for_reversal"=>"DUPLICATE_ENTRY",
+      "original_id"=>"083a2d38-a82f-41f2-b658-01c8402b70d4"
+    },
+    "created_at"=>"2024-09-26T10:15:30.123456Z", 
+    "updated_at"=>"2024-09-26T10:15:30.123456Z", 
+    "links"=>[
+      {
+        "method"=>"GET", 
+        "rel"=>"self", 
+        "href"=>"https://uat.api.svb.com/v2/transfer/reversal/7a9b8c7d-6e5f-4a3b-2c1d-0e9f8a7b6c5d"
+      }
+    ]
+  }
+}
+```
+
 ### Account Transfers
 
 #### Create an account-to-account book transfer
