@@ -101,7 +101,7 @@ module ACH
       },
       reversal_details_single_mass_id: {
         reason_for_reversal: reason,
-        original_id: id
+        original_mass_delivery_id: id
       }
     }
 
